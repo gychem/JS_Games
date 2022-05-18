@@ -2,9 +2,8 @@
 
 let randomNumber = Math.floor(Math.random() * 17) + 1;
 console.log(randomNumber)
-let randomNumberMinus = --randomNumber;
-let randomNumberPlus = ++randomNumber;
-let randomNumberPlus2 = ++randomNumberPlus;
+let randomNumberMinus = randomNumber - 1;
+let randomNumberPlus = randomNumber + 1;
 
 window.guessNumber = guessNumber;
 
@@ -16,7 +15,7 @@ function guessNumber() {
 
     if(randomNumber == guessedNumber) {
         document.querySelector("#guessResult").innerText = `Awesome! Your number ${randomNumber} is correct!`;
-    } else if(guessedNumber == randomNumberMinus || guessedNumber == randomNumberPlus2) {
+    } else if(guessedNumber == randomNumberMinus || guessedNumber == randomNumberPlus) {
         document.querySelector("#guessResult").innerText = `${guessedNumber} is so close, but you just missed it! Are you in a class that started on the thirteenth or what?`;
 
         
