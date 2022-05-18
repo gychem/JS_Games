@@ -6,16 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors</title>
     <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main>
-        Choose your weapon and play against the computer !<br>
-        <!-- <div id="weaponRock"><a href="#" id="">Rock</a></div> -->
-        <input type="submit" id="weaponRock" value="Rock">
-        <input type="submit" id="weaponPaper" value="Paper">
-        <input type="submit" id="weaponScissor" value="Scissor">
-
-        <div id="result"></div>
-    </main>
+    <div id="overlay">
+        <header> <h1>Rock Paper & Scissors</h1></header>
+        <main>
+        
+            Choose your weapon and play against the computer !<br>
+            <!-- <div id="weaponRock"><a href="#" id="">Rock</a></div> -->
+            <div id="controls">
+                <input type="submit" id="weaponRock" value="🪨">
+                <input type="submit" id="weaponPaper" value="🧻">
+                <input type="submit" id="weaponScissor" value="✂️">
+            </div>
+            <div id="computerChoice">
+                <input type="submit" id="choiceRock" value="🪨">
+                <input type="submit" id="choicePaper" value="🧻">
+                <input type="submit" id="choiceScissor" value="✂️">
+            </div>
+            <div id="result"></div>
+            <input type="submit" id="playAgain" value="Play Again">
+        </main>
+    </div>
 </body>
 </html>
