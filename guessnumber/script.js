@@ -1,6 +1,6 @@
 // NICE TO HAVE -> GIVE PLAYER THREE LIVES, each time they are wrong they lose a life
 
-let randomNumber = Math.floor(Math.random() * 17);
+let randomNumber = Math.floor(Math.random() * 17) + 1;
 console.log(randomNumber)
 let randomNumberMinus = --randomNumber;
 let randomNumberPlus = ++randomNumber;
