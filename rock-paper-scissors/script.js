@@ -1,26 +1,33 @@
 
-let weaponButton = document.querySelectorAll("#weapon");
 
-console.log(weaponButton[1])
+const weaponRock = document.getElementById("weaponRock");
+const weaponPaper = document.getElementById("weaponPaper");
+const weaponScissor = document.getElementById("weaponScissor");
+const result = document.getElementById("result");
 
-/*
-inputElement.type = "button"
-inputElement.addEventListener('click', function(){
-    gotoNode(result.name);
-});
-
-
-document.getElementById("weapon").addEventListener("click", function() {
-    console.log("weapon chosen")
+weaponRock.addEventListener("click", function() { //Rock
+    chooseWeapon("rock");
 }, false);
-*/
-window.chooseWeapon = chooseWeapon;
+
+weaponPaper.addEventListener("click", function() { //Paper
+    chooseWeapon("paper");
+}, false);
+
+weaponScissor.addEventListener("click", function() { //Scissor
+    chooseWeapon("scissor");
+}, false);
+
+
 function chooseWeapon(weapon) {
-    if(weapon.value == "rock") {
-        console.log('rock')
-    } else if(weapon == "paper") {
-        console.log('paper')
-    } else if(weapon == "scissor") {
-        console.log('scissor')
+    let randomWeapon = ['rock', 'paper', 'scissor'][Math.floor(Math.random() * 3)];
+    console.log(randomWeapon)
+
+    if(weapon == randomWeapon) {
+        result.innerText = `${weapon} vs ${randomWeapon}: Same weapon, play again`;
+    } else if((weapon == "rock" && randomWeapon == "scissor") || (weapon == "scissor" && randomWeapon == "paper") || (weapon == "paper" && randomWeapon == "rock")) {
+        result.innerText = `${weapon} vs ${randomWeapon}: You have won !`;
+    } else {
+        result.innerText = `${weapon} vs ${randomWeapon}: You have lost !`;
     }
+
 }
