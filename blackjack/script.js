@@ -1,39 +1,41 @@
-// CURRENTLY WORKING ON 1 DECK UPDATE TO 6 DECKS
-// 
+// Game currently works with one deck, give the option to choose the amount of decks used.
+// Make code shorter
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////// VARIABLES
 const suits = ["Spades", "Diamonds", "Clubs", "Hearts"];
 const values = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King",];
-let deck = [];
-const startNewGamebtn = document.getElementById('startNewGame');
+
+let deck;
 let player; 
 let computer;
 let mergedComputerHand; 
 let mergedPlayerHand
 let dealPlayerCards;
 let dealComputerCards;
-let gameActive = false;
-let standActive = false;
+let standActive;
 let bank = 500;
 let currentBet = 0;
 
-
+document.querySelector('#bank').innerHTML = `<b>Bank:</b> €${bank}`
+document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
+const controls = document.getElementById('controls');
+const startNewGamebtn = document.getElementById('startNewGame');
+///////////////////////////////////////////////////////////////////////////////////////////////////////// START NEW GAME / RESTART GAME
 function startNewGame()
 {
-    if(gameActive == true) {
-        deck = [];
-        standActive = false;
-    }
-    gameActive = true;
+    document.querySelector('#computerScore').innerHTML = ``
+    document.getElementById('message').innerHTML = 'You have started a new game, goodluck !';
     startNewGamebtn.innerText = 'Restart Game';
+    controls.style.visibility = "visible";
+    deck = [];
+    player = { Name: 'Player', Points: 0, Hand: [], };
+    computer = { Name: 'Computer', Points: 0, Hand: [], };
+    standActive = false;
     createDeck();
     shuffleCards();
     dealHands();
-    document.getElementById('message').innerHTML = 'You have started a new game, goodluck !';
-    console.log(deck)
 }
-
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////// CREATE DECK
 function createDeck() {
     for (let i = 0; i < suits.length; i++) {
         for (let x = 0; x < values.length; x++) {
@@ -49,7 +51,7 @@ function createDeck() {
         }
     }
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////// SHUFFLE DECK CARDS
 function shuffleCards() {
     for (let i = deck.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * i);
@@ -58,14 +60,7 @@ function shuffleCards() {
         deck[j] = temp;
     }
 }
-
-
-document.querySelector('#bank').innerHTML = `<b>Bank:</b> €${bank}`
-document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
-
-// ON DRAW GIVE MONEY BACK
-// ON WIN DOUBLE THE MONEY
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////// BETS
 function placeBet(amount) {
     if(bank < amount) {
         document.getElementById('message').innerHTML = `
@@ -74,7 +69,6 @@ function placeBet(amount) {
     } else if (bank >= amount) {
         currentBet = currentBet + amount;
         bank = bank - amount;
-        console.log("Bet placed " + amount + " Total amount " + currentBet)
         document.querySelector('#bank').innerHTML = `<b>Bank:</b> €${bank}`
         document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
     }
@@ -86,10 +80,11 @@ function resetBank() {
     document.getElementById('message').innerHTML = `PLACE YOUR BET`;
     
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////// LOSE, WIN or DRAW
 function gameLost() {
     currentBet = 0;
     document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
+    controls.style.visibility = "hidden";
 }
 
 function gameWon() {
@@ -97,6 +92,7 @@ function gameWon() {
     currentBet = 0;
     document.querySelector('#bank').innerHTML = `<b>Bank:</b> €${bank}`
     document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
+    controls.style.visibility = "hidden";
 }
 
 function gameDraw() {
@@ -104,10 +100,9 @@ function gameDraw() {
     currentBet = 0;
     document.querySelector('#bank').innerHTML = `<b>Bank:</b> €${bank}`
     document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
+    controls.style.visibility = "hidden";
 }
-
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////// DEAL CARDS
 function dealHands()
 {
     for (let i = 0; i < 2; i++) {
@@ -118,7 +113,7 @@ function dealHands()
     }
     player = { Name: 'Player', Points: 0, Hand: dealPlayerCards, };
     computer = { Name: 'Computer', Points: 0, Hand: dealComputerCards, };
-    console.log(player, computer);
+ 
    
 
     for (let index = 0; index < player.Hand.length; index++) {
@@ -127,9 +122,11 @@ function dealHands()
     for (let index = 0; index < computer.Hand.length; index++) {
         computer.Points = computer.Points + computer.Hand[index].Weight;       
     }
- renderCards();
-}
 
+    document.querySelector('#playerScore').innerHTML = ` (Score: ${player.Points})`
+    renderCards();
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////// ADD VISIBLE CARDS
 function renderCards()
 {
     let renderComputerCards = "";
@@ -156,39 +153,60 @@ function renderCards()
     document.getElementById("computer").innerHTML = renderComputerCards;
     document.getElementById("player").innerHTML = renderPlayerCards;
 }
-
-
-
-
-function hitCard(playerOrComputer)
+/////////////////////////////////////////////////////////////////////////////////////////////////// GIVE PLAYER 1 CARD OR COMPUTER CARDS 
+function hitCard(playerOrComputer) 
 {
     let card = deck.pop();
     playerOrComputer.Hand.push(card);
     renderCards();
     playerOrComputer.Points = playerOrComputer.Points + card.Weight;
+    document.querySelector('#playerScore').innerHTML = ` (Score: ${player.Points})`
     check();
 }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////// STAND AND GIVE COMPUTER CARDS
+function stand()
+{
+    standActive = true;
+    if(computer.Points < 18) {
+        for (let i; computer.Points < 18; i++) {
+            hitCard(computer);
+        }
+    } else {
+        check();
+        renderCards();
+    }
+     document.querySelector('#computerScore').innerHTML = ` (Score: ${computer.Points})`
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////// CHECK SCORES TO SEE WHO WON
 function check()
 {
-    console.log("player:" + player.Points);
-    console.log("computer:" + computer.Points);
     if (player.Points > 21)
     {
-        gameLost();
-        document.getElementById('message').innerHTML = 'You <font color="darkred">LOST</font> the game.';
+        player.Hand.forEach(function (result) {
+            if(result.Value == "Ace" && player.Points > 21) {
+                if(result.Weight == 11) {
+                 result.Weight = 1;
+                 player.Points = player.Points - 10;
+                 document.querySelector('#playerScore').innerHTML = ` (Score: ${player.Points})`
+                }
+            } 
+         })
+         player.Hand.forEach(function (result) {
+            if(result.Value != "Ace" && player.Points > 21) {
+                gameLost();
+                document.getElementById('message').innerHTML = 'You <font color="darkred">LOST</font> the game.';
+            } 
+         })
     } 
-    else if (computer.Points > 21)
+    else if(standActive == true && computer.Points >= 18)
     {
-        gameWon();
-        document.getElementById('message').innerHTML = 'You have <font color="darkgreen">WON</font> won the game.';
-    } 
-    else if (computer.Points >= 18)
-    {
-        if(computer.Points > player.Points) {
+        checkForAce(player);
+        checkForAce(computer);
+         
+        if(computer.Points <= 21 && computer.Points > player.Points) {
             gameLost();
             document.getElementById('message').innerHTML = 'You <font color="darkred">LOST</font> the game.';    
-        } else if(player.Points > computer.Points) {
+        } else if(computer.Points > 21 || player.Points > computer.Points) {
             gameWon();
             document.getElementById('message').innerHTML = 'You have <font color="darkgreen">WON</font> won the game.';
         } else if(player.Points == computer.Points) {
@@ -197,15 +215,23 @@ function check()
         } 
     }
 }
-
-function stand()
-{
-    standActive = true;
-    if(computer.Points < 18)
-        for (let i; computer.Points < 18; i++) {
-            hitCard(computer);
-        }
-    else check();
+/////////////////////////////////////////////////////////////////////////////////////////////////// CHECK FOR ACE IN DECK
+function checkForAce(playerOrComputer) {
+    playerOrComputer.Hand.forEach(function (result) {
+        if(result.Value == "Ace" && playerOrComputer.Points > 21) {
+            if(result.Weight == 11) {
+             result.Weight = 1;
+             playerOrComputer.Points = playerOrComputer.Points - 10;
+             document.querySelector('#playerScore').innerHTML = ` (Score: ${playerOrComputer.Points})`
+            }
+        } 
+     })
+     playerOrComputer.Hand.forEach(function (result) {
+        if(result.Value != "Ace" && playerOrComputer.Points > 21) {
+            gameWon();
+            document.getElementById('message').innerHTML = 'You have <font color="darkgreen">WON</font> won the game.';
+        } 
+     })
 }
 
 

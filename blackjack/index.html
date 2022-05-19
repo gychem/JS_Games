@@ -13,12 +13,14 @@
     <main>
         <button id="startNewGame" onclick="startNewGame()" type="button">START THE GAME</button>
         <section id="playField">
-            <b>Dealer's Cards</b>
+            <b>Dealer's Cards</b><span id="computerScore"></span>
             <div id="computer"></div>
-            <b>Your Cards</b>
+            <b>Your Cards</b><span id="playerScore"></span>
             <div id="player"></div>
-            <button id="" onclick="hitCard(player)" type="button">Hit</button>
-            <button id="" onclick="stand()" type="button">Stand</button>
+            <div id="controls">
+                <button id="" onclick="hitCard(player)" type="button">Hit</button>
+                <button id="" onclick="stand()" type="button">Stand</button>
+            </div>
         </section>
         <section id="betField">
             <div id="placedBet">
