@@ -49,6 +49,7 @@ let mergedComputerHand;
 let mergedPlayerHand
 let dealPlayerCards;
 let dealComputerCards;
+let standActive = false;
 
 function dealHands()
 {
@@ -77,9 +78,29 @@ function renderCards()
     let renderComputerCards = "";
     let renderPlayerCards = "";
 
-    computer.Hand.forEach(function (result) {
-      (renderComputerCards += `<img src="./cardimages/${result.Suit}${result.Value}.png">`); 
-    })
+    // computer.Hand.forEach(function (result) {
+    //   (renderComputerCards += `
+    //   <img src="./cardimages/backSide.png">
+    //   <img src="./cardimages/${result.Suit}${result.Value}.png">
+    //   `); 
+    // })
+    if(standActive == false) {
+        for(let i = 1; i < computer.Hand.length; i++)
+        {
+            (renderComputerCards += `
+            <img src="./cardimages/backSide.png">
+            <img src="./cardimages/${computer.Hand[i].Suit}${computer.Hand[i].Value}.png">
+            `); 
+        }
+    } else if(standActive == true) {
+        computer.Hand.forEach(function (result) {
+            (renderComputerCards += `<img src="./cardimages/${result.Suit}${result.Value}.png">`); 
+        })
+    }
+
+    //backSide.png
+
+
     player.Hand.forEach(function (result) {
         (renderPlayerCards += `<img src="./cardimages/${result.Suit}${result.Value}.png">`); 
     })
@@ -127,6 +148,7 @@ function check()
 
 function stand()
 {
+    standActive = true;
     if(computer.Points < 18)
         for (let i; computer.Points < 18; i++) {
             hitCard(computer);
