@@ -48,6 +48,32 @@ section {
     padding: 10px;
 }
 
+#playField {
+    background-color: #3F707E;
+    /* visibility: hidden; */
+}
+
+#betField {
+    display: flex;
+    align-items: center;
+}
+
+#resetBank {
+    margin-left: 20px;
+    background-color: #262626;
+    border: 0;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#resetBank:hover {
+    margin-left: 20px;
+    background-color: white;
+    color: black;
+    border: 0;
+}
+
 img {
     width: 100px;
     margin-right: 5px;
@@ -56,6 +82,19 @@ img {
 #computer, #player {
     display: flex;
 }
+
+#coins {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#coins img:hover {
+    opacity: 0.7;
+}
+
 
 #message {
     width: 100%;

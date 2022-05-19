@@ -11,16 +11,28 @@
 <body>
     <h1>BlackJack 21</h1>
     <main>
-        <button id="startNewGame" onclick="startNewGame()" type="button">Start New Game</button>
-        <section>
-            <b>Dealer Cards</b>
+        <button id="startNewGame" onclick="startNewGame()" type="button">START THE GAME</button>
+        <section id="playField">
+            <b>Dealer's Cards</b>
             <div id="computer"></div>
             <b>Your Cards</b>
             <div id="player"></div>
             <button id="" onclick="hitCard(player)" type="button">Hit</button>
             <button id="" onclick="stand()" type="button">Stand</button>
         </section>
-        <div id="message">Welcome to BlackJack 21 !</div>
+        <section id="betField">
+            <div id="placedBet">
+                <div id="bank"></div>
+                <div id="currentBet"></div>
+            </div>
+            <div id="coins">
+                <img onclick="placeBet(5)" src="images/coins/5.png">
+                <img onclick="placeBet(10)" src="images/coins/10.png">
+                <img onclick="placeBet(25)" src="images/coins/25.png">
+                <img onclick="placeBet(100)" src="images/coins/100.png">
+            </div>
+        </section>
+        <div id="message">PLACE YOUR BET</div>
     </main>
 </body>
 </html>

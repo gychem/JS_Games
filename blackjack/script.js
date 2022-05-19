@@ -1,14 +1,30 @@
 // CURRENTLY WORKING ON 1 DECK UPDATE TO 6 DECKS
-// Update styling 
-// Update COMPUTER - stay - make first card hidden
+// 
+
 
 const suits = ["Spades", "Diamonds", "Clubs", "Hearts"];
 const values = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King",];
 let deck = [];
 const startNewGamebtn = document.getElementById('startNewGame');
+let player; 
+let computer;
+let mergedComputerHand; 
+let mergedPlayerHand
+let dealPlayerCards;
+let dealComputerCards;
+let gameActive = false;
+let standActive = false;
+let bank = 500;
+let currentBet = 0;
+
 
 function startNewGame()
 {
+    if(gameActive == true) {
+        deck = [];
+        standActive = false;
+    }
+    gameActive = true;
     startNewGamebtn.innerText = 'Restart Game';
     createDeck();
     shuffleCards();
@@ -43,13 +59,54 @@ function shuffleCards() {
     }
 }
 
-let player; 
-let computer;
-let mergedComputerHand; 
-let mergedPlayerHand
-let dealPlayerCards;
-let dealComputerCards;
-let standActive = false;
+
+document.querySelector('#bank').innerHTML = `<b>Bank:</b> €${bank}`
+document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
+
+// ON DRAW GIVE MONEY BACK
+// ON WIN DOUBLE THE MONEY
+
+function placeBet(amount) {
+    if(bank < amount) {
+        document.getElementById('message').innerHTML = `
+        You don't have enough money in the bank!
+        <button id="resetBank" onclick="resetBank()" type="button">RESET BANK</button>`;
+    } else if (bank >= amount) {
+        currentBet = currentBet + amount;
+        bank = bank - amount;
+        console.log("Bet placed " + amount + " Total amount " + currentBet)
+        document.querySelector('#bank').innerHTML = `<b>Bank:</b> €${bank}`
+        document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
+    }
+}
+
+function resetBank() {
+    bank = 500;
+    document.querySelector('#bank').innerHTML = `<b>Bank:</b> €${bank}`
+    document.getElementById('message').innerHTML = `PLACE YOUR BET`;
+    
+}
+
+function gameLost() {
+    currentBet = 0;
+    document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
+}
+
+function gameWon() {
+    bank = bank + (currentBet * 2);
+    currentBet = 0;
+    document.querySelector('#bank').innerHTML = `<b>Bank:</b> €${bank}`
+    document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
+}
+
+function gameDraw() {
+    bank = bank + currentBet;
+    currentBet = 0;
+    document.querySelector('#bank').innerHTML = `<b>Bank:</b> €${bank}`
+    document.querySelector('#currentBet').innerHTML = `<b>Current Bet:</b> €${currentBet}`
+}
+
+
 
 function dealHands()
 {
@@ -78,12 +135,6 @@ function renderCards()
     let renderComputerCards = "";
     let renderPlayerCards = "";
 
-    // computer.Hand.forEach(function (result) {
-    //   (renderComputerCards += `
-    //   <img src="./cardimages/backSide.png">
-    //   <img src="./cardimages/${result.Suit}${result.Value}.png">
-    //   `); 
-    // })
     if(standActive == false) {
         for(let i = 1; i < computer.Hand.length; i++)
         {
@@ -97,9 +148,6 @@ function renderCards()
             (renderComputerCards += `<img src="./cardimages/${result.Suit}${result.Value}.png">`); 
         })
     }
-
-    //backSide.png
-
 
     player.Hand.forEach(function (result) {
         (renderPlayerCards += `<img src="./cardimages/${result.Suit}${result.Value}.png">`); 
@@ -127,23 +175,27 @@ function check()
     console.log("computer:" + computer.Points);
     if (player.Points > 21)
     {
+        gameLost();
         document.getElementById('message').innerHTML = 'You <font color="darkred">LOST</font> the game.';
     } 
     else if (computer.Points > 21)
     {
+        gameWon();
         document.getElementById('message').innerHTML = 'You have <font color="darkgreen">WON</font> won the game.';
     } 
     else if (computer.Points >= 18)
     {
-        if(computer.Points > player.Points)
-            document.getElementById('message').innerHTML = 'You <font color="darkred">LOST</font> the game.';
-        else if(player.Points > computer.Points)
+        if(computer.Points > player.Points) {
+            gameLost();
+            document.getElementById('message').innerHTML = 'You <font color="darkred">LOST</font> the game.';    
+        } else if(player.Points > computer.Points) {
+            gameWon();
             document.getElementById('message').innerHTML = 'You have <font color="darkgreen">WON</font> won the game.';
-        else if(player.Points == computer.Points)
+        } else if(player.Points == computer.Points) {
+            gameDraw();
             document.getElementById('message').innerHTML = 'Draw';
-    } 
-
-
+        } 
+    }
 }
 
 function stand()
