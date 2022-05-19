@@ -39,7 +39,7 @@ function chooseWeapon(weapon) {
    weaponScissor.disabled = true;
    
     if(weapon == randomWeapon) {
-        result.innerText = `Same weapon, play again`;
+        result.innerText = `Draw !`;
         document.getElementById(weaponChoice).style.border = "2px solid orange";
         document.getElementById(computerChoiceInput).style.border = "2px solid orange";
     } else if((weapon == "Rock" && randomWeapon == "Scissor") || (weapon == "Scissor" && randomWeapon == "Paper") || (weapon == "Paper" && randomWeapon == "Rock")) {
