@@ -1,0 +1,12 @@
+body {
+    font-family: calibri;
+}
+
+img {
+    width: 100px;
+    margin-right: 5px;
+}
+
+#computer, #player {
+    display: flex;
+}

@@ -27,9 +27,6 @@ weaponScissor.addEventListener("click", function() { //Scissor
     chooseWeapon("Scissor");
 }, false);
 
-
-
-
 function chooseWeapon(weapon) {
     let randomWeapon = ['Rock', 'Paper', 'Scissor'][Math.floor(Math.random() * 3)];
     
