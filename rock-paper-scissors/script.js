@@ -3,7 +3,7 @@ Add extra options for the player: lizard & spock
 Keep track of the score after multiple games
 Add more options for a player to choose from (example: a risky option that awards more points but has a higher chance of losing)
 Add even more options (but avoid using 100 if statements)
-Can you make a player win 100% of the games? Or win 75%? (not to raise any suspicion)
+Can you make a player win 100% of the games? Or win 75%? not to raise any suspicion
 */
 
 const weaponRock = document.getElementById("weaponRock");
