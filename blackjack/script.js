@@ -108,7 +108,11 @@ function check()
     {
         document.getElementById('message').innerHTML = 'You <font color="darkred">LOST</font> the game.';
     } 
-    if (computer.Points >= 18)
+    else if (computer.Points > 21)
+    {
+        document.getElementById('message').innerHTML = 'You have <font color="darkgreen">WON</font> won the game.';
+    } 
+    else if (computer.Points >= 18)
     {
         if(computer.Points > player.Points)
             document.getElementById('message').innerHTML = 'You <font color="darkred">LOST</font> the game.';
@@ -117,10 +121,7 @@ function check()
         else if(player.Points == computer.Points)
             document.getElementById('message').innerHTML = 'Draw';
     } 
-    if (computer.Points > 21)
-    {
-        document.getElementById('message').innerHTML = 'You have <font color="darkgreen">WON</font> won the game.';
-    } 
+
 
 }
 
