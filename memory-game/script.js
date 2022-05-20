@@ -46,47 +46,34 @@ function startGame() {
 }
 ///////////////////////////////////////////////////////////////////////////////// CLICK ON CARDS EVENT
 document.addEventListener('click', event => {
-    const target = event.target
-    const cardParentDiv = target.parentElement
-
-    if (target.className.includes('card') && !cardParentDiv.className.includes('flipped')) {
-        flipCard(cardParentDiv)
-    // } else if (target.nodeName === 'BUTTON' && !target.className.includes('disabled')) {
-    //     startGame()
-     }
+    if (event.target.className.includes('card') && !event.target.parentElement.className.includes('flipped')) {
+        flipCard(event.target.parentElement)
+    }
 })
 ///////////////////////////////////////////////////////////////////////////////// FLIP CARDS
-const state = {
-    flippedCards: 0,
-    totalFlips: 0,
-    totalTime: 0,
-    loop: null
-}
+let flippedCards = 0; 
+let totalFlips = 0;
 
-const flipCard = card => {
-    state.flippedCards++
-    state.totalFlips++
+function flipCard(card) {
+    flippedCards++
+    totalFlips++
 
-    if (state.flippedCards <= 2) {  card.classList.add('flipped') }
+    if (flippedCards <= 2) {  card.classList.add('flipped') }
 
-    if (state.flippedCards === 2) {
+    if (flippedCards === 2) {
         const flippedCards = document.querySelectorAll('.flipped:not(.matched)')
 
         if (flippedCards[0].innerText === flippedCards[1].innerText) {
             flippedCards[0].classList.add('matched')
             flippedCards[1].classList.add('matched')
         }
-
-        setTimeout(() => {
-            flipBackCards()
-        }, 1000)
+        setTimeout(() => { flipCardsBack() }, 1000)
     }
 } 
 
-const flipBackCards = () => {
+function flipCardsBack() {
     document.querySelectorAll('.card:not(.matched)').forEach(card => {
         card.classList.remove('flipped')
     })
-
-    state.flippedCards = 0
+    flippedCards = 0
 }
