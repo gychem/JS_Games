@@ -114,8 +114,6 @@ function dealHands()
     player = { Name: 'Player', Points: 0, Hand: dealPlayerCards, };
     computer = { Name: 'Computer', Points: 0, Hand: dealComputerCards, };
  
-   
-
     for (let index = 0; index < player.Hand.length; index++) {
         player.Points = player.Points + player.Hand[index].Weight;       
     }
@@ -145,7 +143,6 @@ function renderCards()
             (renderComputerCards += `<img src="./cardimages/${result.Suit}${result.Value}.png">`); 
         })
     }
-
     player.Hand.forEach(function (result) {
         (renderPlayerCards += `<img src="./cardimages/${result.Suit}${result.Value}.png">`); 
     })
@@ -233,8 +230,3 @@ function checkForAce(playerOrComputer) {
         } 
      })
 }
-
-
-
-
-

@@ -7,9 +7,10 @@ let animals = ['🐕', '🐈', '🐘', '🐁', '🐒', '🐅', '🐎', '🐪']
 let animalsClone = [...animals];
 animals = animals.concat(animalsClone);
 ///////////////////////////////////////////////////////////////////////////////// LOAD CARDS
+shuffleCards()
 loadCards()
+
 function loadCards() {
-    shuffleCards()
     let renderCards = '';
     if(gameActive == false) {
         cardClass = "card flipped";
@@ -40,7 +41,7 @@ function shuffleCards() {
 ///////////////////////////////////////////////////////////////////////////////// START THE GAME
 function startGame() {
     gameContainer.innerHTML = '';
-    startGameButton.innerText = 'Restart Game';
+    startGameButton.style.visibility = 'hidden';
     gameActive = true;
     loadCards()
 }
@@ -56,7 +57,7 @@ let totalFlips = 0;
 
 function flipCard(card) {
     flippedCards++
-    totalFlips++
+    
 
     if (flippedCards <= 2) {  card.classList.add('flipped') }
 
@@ -66,8 +67,16 @@ function flipCard(card) {
         if (flippedCards[0].innerText === flippedCards[1].innerText) {
             flippedCards[0].classList.add('matched')
             flippedCards[1].classList.add('matched')
+            totalFlips++
         }
         setTimeout(() => { flipCardsBack() }, 1000)
+
+        console.log("totalflips" +totalFlips);
+    }
+
+    if(totalFlips == 7) {
+        startGameButton.innerText = 'Restart Game';
+        startGameButton.style.visibility = 'visible';
     }
 } 
 
