@@ -11,6 +11,8 @@ shuffleCards()
 loadCards()
 
 function loadCards() {
+    document.getElementById('gameCompleted').style.visibility = 'hidden';
+
     let renderCards = '';
     if(gameActive == false) {
         cardClass = "card flipped";
@@ -40,10 +42,16 @@ function shuffleCards() {
 }
 ///////////////////////////////////////////////////////////////////////////////// START THE GAME
 function startGame() {
-    gameContainer.innerHTML = '';
-    startGameButton.style.visibility = 'hidden';
-    gameActive = true;
-    loadCards()
+    if(gameActive == true) {
+        gameActive = false;
+        startGameButton.innerText = 'Start Game';
+        loadCards()
+    } else {
+        gameContainer.innerHTML = '';
+        startGameButton.style.visibility = 'hidden';
+        gameActive = true;
+        loadCards()
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////// CLICK ON CARDS EVENT
 document.addEventListener('click', event => {
@@ -74,9 +82,13 @@ function flipCard(card) {
         console.log("totalflips" +totalFlips);
     }
 
-    if(totalFlips == 7) {
-        startGameButton.innerText = 'Restart Game';
+    if(totalFlips == 8) {
         startGameButton.style.visibility = 'visible';
+        startGameButton.innerText= 'Play Again';
+        setTimeout(() => { 
+            document.getElementById('gameCompleted').style.visibility = 'visible';
+        }, 1000)
+       
     }
 } 
 
