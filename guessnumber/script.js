@@ -13,14 +13,18 @@ function guessNumber() {
     const guessedNumber = document.querySelector("#guessedNumber").value;
     console.log(randomNumberPlus);
 
-    if(randomNumber == guessedNumber) {
-        document.querySelector("#guessResult").innerText = `Awesome! Your number ${randomNumber} is correct!`;
-    } else if(guessedNumber == randomNumberMinus || guessedNumber == randomNumberPlus) {
-        document.querySelector("#guessResult").innerText = `${guessedNumber} is so close, but you just missed it! Are you in a class that started on the thirteenth or what?`;
+    document.querySelector("#guessResult").style.display = 'block';
 
+    if(randomNumber == guessedNumber) {
+        document.querySelector("#guessResult").innerText = `Awesome! Number ${randomNumber} is correct!`;
+        document.querySelector("#guessResult").style.backgroundColor = '#CCFFFF';
+    } else if(guessedNumber == randomNumberMinus || guessedNumber == randomNumberPlus) {
+        document.querySelector("#guessResult").innerText = `${guessedNumber} is so close, but you just missed it!`;
+        document.querySelector("#guessResult").style.backgroundColor = 'orange';
         
     } else {
-        document.querySelector("#guessResult").innerText = `${guessedNumber} is the wrong number ! Try again`;
+        document.querySelector("#guessResult").innerText = `Number ${guessedNumber} is wrong ! Try again`;
+        document.querySelector("#guessResult").style.backgroundColor = '#FFF0F0';
     }
 
 }
