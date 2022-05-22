@@ -43,6 +43,11 @@ function shuffleCards() {
 ///////////////////////////////////////////////////////////////////////////////// START THE GAME
 let _initTime = Date.now()
 let elapsedTime = 0;
+let flippedCards = 0; 
+let totalFlips = 0;
+let amountOfTries = 0;
+let secondsTimer;
+//let secondsTimer;
 
 function startGame() {
     if(gameActive == true) {
@@ -55,21 +60,24 @@ function startGame() {
         gameActive = true;
         loadCards()
     }
-    startTime() 
+    elapsedTime = 0;
+    amountOfTries = 0;
+
+    startTime()
+
     document.getElementById('statsBoard').style.display = 'block';
 }
 
 function updateTime() {
     elapsedTime++
-    startTime() 
+    startTime()
     document.getElementById('statsBoard').innerHTML = `<b>Elapsed time in seconds:</b> ${elapsedTime}<br><b>Amount of tries:</b> ${amountOfTries}`;
 }
 
-function startTime() {
-    setTimeout(() => { 
-        updateTime() 
-    }, 1000)
-}  
+ function startTime() {
+    secondsTimer = setTimeout(updateTime, 1000);
+    //setTimeout(updateTime, 1000);
+ }  
 
 ///////////////////////////////////////////////////////////////////////////////// CLICK ON CARDS EVENT
 document.addEventListener('click', event => {
@@ -78,10 +86,6 @@ document.addEventListener('click', event => {
     }
 })
 ///////////////////////////////////////////////////////////////////////////////// FLIP CARDS
-let flippedCards = 0; 
-let totalFlips = 0;
-let amountOfTries = 0;
-
 function flipCard(card) {
     flippedCards++
     
@@ -109,9 +113,10 @@ function flipCard(card) {
             document.getElementById('gameCompleted').style.visibility = 'visible';
             startGameButton.style.display = 'block';
             let totalTime = elapsedTime;
+            clearTimeout(secondsTimer);
             document.getElementById('statsBoard').style.display = 'none';
             document.getElementById('gameCompleted').innerHTML = `
-                Congratulations,<br>You have completed the game with ${amountOfTries} tries after ${totalTime} seconds!<br>
+                Congratulations,<br>You have completed the game with <b>${amountOfTries}</b> tries after <b>${totalTime}</b> seconds!<br>
                 Click on 'Play Again' above to start a new game, goodluck !
             `;
 
