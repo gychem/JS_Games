@@ -55,13 +55,9 @@ function startGame() {
         gameActive = true;
         loadCards()
     }
-
     startTime() 
-
     document.getElementById('statsBoard').style.display = 'block';
-
 }
-
 
 function updateTime() {
     elapsedTime++
@@ -74,7 +70,6 @@ function startTime() {
         updateTime() 
     }, 1000)
 }  
-
 
 ///////////////////////////////////////////////////////////////////////////////// CLICK ON CARDS EVENT
 document.addEventListener('click', event => {
@@ -90,8 +85,6 @@ let amountOfTries = 0;
 function flipCard(card) {
     flippedCards++
     
-    
-
     if (flippedCards <= 2) {  
         card.classList.add('flipped') 
 
@@ -100,7 +93,6 @@ function flipCard(card) {
             document.getElementById('statsBoard').innerHTML = `<b>Elapsed time in seconds:</b> ${elapsedTime}<br><b>Amount of tries:</b> ${amountOfTries}`;
         }
     }
-
     if (flippedCards === 2) {
         const flippedCards = document.querySelectorAll('.flipped:not(.matched)')
 
@@ -110,10 +102,7 @@ function flipCard(card) {
             totalFlips++
         }
         setTimeout(() => { flipCardsBack() }, 1000)
-
-        console.log("totalflips" +totalFlips);
     }
-
     if(totalFlips == 8) {
         startGameButton.innerText= 'Play Again';
         setTimeout(() => { 
@@ -132,9 +121,6 @@ function flipCard(card) {
 } 
 
 function flipCardsBack() {
-    
-
-
     document.querySelectorAll('.card:not(.matched)').forEach(card => {
         card.classList.remove('flipped')
     })
