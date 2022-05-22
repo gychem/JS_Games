@@ -41,6 +41,9 @@ function shuffleCards() {
     }
 }
 ///////////////////////////////////////////////////////////////////////////////// START THE GAME
+let _initTime = Date.now()
+let elapsedTime = 0;
+
 function startGame() {
     if(gameActive == true) {
         gameActive = false;
@@ -52,7 +55,27 @@ function startGame() {
         gameActive = true;
         loadCards()
     }
+
+    startTime() 
+
+    document.getElementById('statsBoard').style.display = 'block';
+
 }
+
+
+function updateTime() {
+    elapsedTime++
+    startTime() 
+    document.getElementById('statsBoard').innerHTML = `<b>Elapsed time in seconds:</b> ${elapsedTime}<br><b>Amount of tries:</b> ${amountOfTries}`;
+}
+
+function startTime() {
+    setTimeout(() => { 
+        updateTime() 
+    }, 1000)
+}  
+
+
 ///////////////////////////////////////////////////////////////////////////////// CLICK ON CARDS EVENT
 document.addEventListener('click', event => {
     if (event.target.className.includes('card') && !event.target.parentElement.className.includes('flipped')) {
@@ -62,12 +85,21 @@ document.addEventListener('click', event => {
 ///////////////////////////////////////////////////////////////////////////////// FLIP CARDS
 let flippedCards = 0; 
 let totalFlips = 0;
+let amountOfTries = 0;
 
 function flipCard(card) {
     flippedCards++
     
+    
 
-    if (flippedCards <= 2) {  card.classList.add('flipped') }
+    if (flippedCards <= 2) {  
+        card.classList.add('flipped') 
+
+        if(flippedCards == 2) {
+            amountOfTries++
+            document.getElementById('statsBoard').innerHTML = `<b>Elapsed time in seconds:</b> ${elapsedTime}<br><b>Amount of tries:</b> ${amountOfTries}`;
+        }
+    }
 
     if (flippedCards === 2) {
         const flippedCards = document.querySelectorAll('.flipped:not(.matched)')
@@ -87,12 +119,22 @@ function flipCard(card) {
         setTimeout(() => { 
             document.getElementById('gameCompleted').style.visibility = 'visible';
             startGameButton.style.display = 'block';
+            let totalTime = elapsedTime;
+            document.getElementById('statsBoard').style.display = 'none';
+            document.getElementById('gameCompleted').innerHTML = `
+                Congratulations,<br>You have completed the game with ${amountOfTries} tries after ${totalTime} seconds!<br>
+                Click on 'Play Again' above to start a new game, goodluck !
+            `;
+
         }, 1000)
        
     }
 } 
 
 function flipCardsBack() {
+    
+
+
     document.querySelectorAll('.card:not(.matched)').forEach(card => {
         card.classList.remove('flipped')
     })

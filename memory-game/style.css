@@ -61,6 +61,15 @@ h1 {
     width: 100%;    
 }
 
+#statsBoard {
+    margin-top: 10px;
+    background-color: white;
+    border-radius: 5px;
+    width: calc(100% + 5px);
+    padding: 5px;
+    display: none;
+}
+
 button {
     cursor: pointer;
 }
