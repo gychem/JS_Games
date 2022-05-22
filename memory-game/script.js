@@ -48,7 +48,7 @@ function startGame() {
         loadCards()
     } else {
         gameContainer.innerHTML = '';
-        startGameButton.style.visibility = 'hidden';
+        startGameButton.style.display = 'none';
         gameActive = true;
         loadCards()
     }
@@ -83,10 +83,10 @@ function flipCard(card) {
     }
 
     if(totalFlips == 8) {
-        startGameButton.style.visibility = 'visible';
         startGameButton.innerText= 'Play Again';
         setTimeout(() => { 
             document.getElementById('gameCompleted').style.visibility = 'visible';
+            startGameButton.style.display = 'block';
         }, 1000)
        
     }

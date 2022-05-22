@@ -39,7 +39,22 @@ h1 {
 
 #startGame {
     margin: 0 auto;
-    width: calc(104px*4);
+    width: 430px;
+    background-color: #000;
+}
+
+#startGame button {
+    color: white;
+    outline: none;
+    border-color: #000;
+    background-color: #000;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#startGame button:hover {
+    border-color: #262626;
+    background-color: #262626;
 }
 
 #startGame button {
