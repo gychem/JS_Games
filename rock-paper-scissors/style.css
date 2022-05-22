@@ -40,6 +40,15 @@ main {
     
 }
 
+
+#scoreBoard {
+    visibility: hidden;
+    margin-top: 50px;
+    margin: 0 auto;
+    width: 300px;
+    
+}
+
 #controls {
     display: flex;
     justify-content: center;

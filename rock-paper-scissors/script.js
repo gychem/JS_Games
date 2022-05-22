@@ -28,6 +28,9 @@ weaponScissor.addEventListener("click", function() { //Scissor
 }, false);
 
 function chooseWeapon(weapon) {
+
+   
+
     let randomWeapon = ['Rock', 'Paper', 'Scissor'][Math.floor(Math.random() * 3)];
     
    computerChoice.style.visibility = "visible";
@@ -46,8 +49,10 @@ function chooseWeapon(weapon) {
         document.getElementById(weaponChoice).style.border = "2px solid green";
         document.getElementById(computerChoiceInput).style.border = "2px solid red";
         result.innerText = `You have won !`;
+        updateScore('player')
     } else {
         result.innerText = `You have lost !`;
+        updateScore('computer')
         document.getElementById(weaponChoice).style.border = "2px solid red";
         document.getElementById(computerChoiceInput).style.border = "2px solid green";
     }
@@ -56,6 +61,21 @@ function chooseWeapon(weapon) {
 
     
 }
+
+let computerScore = 0;
+let playerScore = 0;
+
+function updateScore(scoreTo)  {
+    document.getElementById('scoreBoard').style.visibility = 'visible'
+    if(scoreTo == 'computer') {
+        computerScore++
+        document.getElementById('scoreBoard').innerHTML = `Your score: ${playerScore} - Computer's score: ${computerScore}`
+    } else if(scoreTo == 'player') {
+        playerScore++
+        document.getElementById('scoreBoard').innerHTML = `Your score: ${playerScore} - Computer's score: ${computerScore}`
+    }
+}
+
 
 playAgain.addEventListener("click", function() { //Playagain
     weaponRock.style.border = "2px solid black";
