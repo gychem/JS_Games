@@ -10,7 +10,8 @@ let player = document.createElement('div');
 let monster = document.createElement('div');
 let playerActiveId;
 let message = document.querySelector('#message');
-
+let previousDirection;
+let monsterid, monsterMoveLeft, monsterMoveDown, monsterMoveUp, monsterMoveRight;
 //////////////////////////////////////////////////////////////////////////////////////   SELECT MAP LEVEL
 import { LEVEL_1 } from './mazes.js';
 import { LEVEL_2 } from './mazes.js';
@@ -59,7 +60,7 @@ function loadMap(array) {
             merged[i] = `<div id="${i}" class="wall"></div>`;
         }
         if(merged[i] == '.'){
-            merged[i] = `<div id="${i}" class="path"></div>`;
+            merged[i] = `<div id="${i}" class="path"><div id="food${i}" class="food"></div></div>`;
         }
         if(merged[i] == 'S'){
             merged[i] = `<div id="${i}" class="start"></div>`;
@@ -71,8 +72,6 @@ function loadMap(array) {
     let finalarray = merged.join('');
     main.innerHTML = finalarray;
     loadPlayer();
-
-    loadMonsters();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////   LOAD PLAYER
@@ -81,60 +80,80 @@ function loadPlayer() {
     player.setAttribute("class", "player");
     start.appendChild(player);
     player.setAttribute("id", `${start.id}`);
+    loadMonsters();
+    loadFood();
+}
+////////////////////////////////////////////////////////////////////////////////////   LOAD FOOD
+function loadFood () {
+    console.log('load food function called')
+    const path = document.querySelectorAll('.path');
     
+    for (let i = 0; i < path.length; i++) {
+      //  const element = array[i];
+        
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////////   GAME CONTROLS
-
-
-
 
 function loadMonsters() {
     let start = document.querySelector('.start');
     monster.setAttribute("id", `${start.id}`);
     monster.setAttribute("class", "monster");
-    start.appendChild(monster);
-    const myTimeout = setTimeout(moveMonstrers, 500);
+    start.appendChild(monster); 
+    previousDirection = 'monsterMoveDown';
+    moveTimer();
 }
 
-function moveMonstrers() {
-    let start = document.querySelector('.start');
-   // monster.setAttribute("id", `${start.id + 1}`);
-
-    let monsterid = monster.id;
-    let monsterMoveLeft = --monsterid;
-    let monsterMoveRight = monsterid + 1;
-    let monsterMoveUp = monsterid + arrayLenght;
-    let monsterMoveDown = monsterid - arrayLenght;
-
-    console.log('monsterid ' + monsterid)
-    console.log('move left ' + monsterMoveLeft)
-    console.log('move right ' + monsterMoveRight)
-    console.log('move up ' + monsterMoveUp)
-    console.log('move down ' + monsterMoveDown)
-
-    
-    if()
-        
-        
-    ) else if() {
-
-    } else if() {
-        
-    }*/
-
-
-   // if(monster.id)
-
+function moveTimer() {
+    setTimeout(chooseMovement, 300);
 }
 
+function chooseMovement() {
+    monsterid = parseInt(monster.id);
 
+    if(previousDirection == 'monsterMoveDown') 
+    {
+        if(moveMonsters(monsterid +arrayLenght, 'monsterMoveDown') === true) {}    
+        else if(moveMonsters(monsterid +1, 'monsterMoveRight') === true) {}
+        else if(moveMonsters(monsterid -1, 'monsterMoveLeft') === true) {}
+    } 
+    else if(previousDirection == 'monsterMoveRight') 
+    {
+        if(moveMonsters(monsterid +1, 'monsterMoveRight')=== true) {}    
+        else if(moveMonsters(monsterid +arrayLenght, 'monsterMoveDown') === true) {}
+        else if(moveMonsters(monsterid -arrayLenght, 'monsterMoveUp') === true) {}
+    } 
+    else if(previousDirection == 'monsterMoveUp') 
+    {
+        if(moveMonsters(monsterid -arrayLenght, 'monsterMoveUp') === true) {}    
+        else if(moveMonsters(monsterid +1, 'monsterMoveRight') === true) {}
+        else if(moveMonsters(monsterid -1, 'monsterMoveLeft') === true) {}
+    } 
+    else if(previousDirection == 'monsterMoveLeft') 
+    {
+        if(moveMonsters(monsterid -1, 'monsterMoveLeft')=== true) {}    
+        else if(moveMonsters(monsterid +arrayLenght, 'monsterMoveDown') === true) {}
+        else if(moveMonsters(monsterid -arrayLenght, 'monsterMoveUp') === true) {}
+    }
+}
 
-/*
-function myStopFunction() {
-  clearTimeout(myTimeout);
-}*/
+function moveMonsters(direction, directonString) {
+    if(direction >= 0) {
+        if(!document.getElementById(`${direction}`).classList.contains('wall') && !document.getElementById(`${direction}`).classList.contains('start')) 
+        {
+            if(document.getElementById(`${direction}`).getAttribute('id') != previousDirection) {
+                
+                document.getElementById(direction).appendChild(monster);
+                monster.setAttribute("id", `${direction}`);
 
+                previousDirection = directonString;
 
+                moveTimer();
+            } return true;
+        }
+    }
+}
+//////////////////////////////////////////////////////////////////////////////// MOVEMENT KEYS
 document.addEventListener('keydown', event => {
     switch (event.code) {
       case "ArrowRight":
@@ -157,7 +176,7 @@ document.addEventListener('keydown', event => {
         break;
     }
   }) 
-/////////////////////////////////////////////////////////////////////////////////   GAME MOVEMENT
+/////////////////////////////////////////////////////////////////////////////////   PLAYER MOVEMENT
 function movePlayer(direction) {
     if(document.getElementById(direction).classList.contains("wall")) {
         message.innerHTML = "Invalid direction</b> - Try to find another way!";
@@ -174,8 +193,18 @@ function movePlayer(direction) {
         section.style.backgroundColor = `#CCFFFF`;
     } else {
         document.getElementById(direction).appendChild(player);
-        player.setAttribute("id", `${direction}`);
+
         message.innerText = "Navigating through the jungle...";
+
+        let foodid = `food${direction}`;
+        let foodElement = document.getElementById(foodid)
+
+        if(foodElement != null) {
+            document.getElementById(foodid).remove();
+            message.innerText = "Great! You have picked up a coin and stashed it in your bag.";
+        }
+            
+        player.setAttribute("id", `${direction}`);
         section.style.backgroundColor = `white`;
     }
 }
