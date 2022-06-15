@@ -1,57 +1,28 @@
-//////////////////////////////////////////////////////////////////////////////////////  TO DO
-// - You could also create levels of your own
-// - Display the time spent to solve the maze
-// - Update year in footer automatically
 //////////////////////////////////////////////////////////////////////////////////////   VARIABLES
 const main = document.querySelector('main'); 
 const section = document.querySelector('section'); 
+const player = document.createElement('div');
+const message = document.querySelector('#message');
 let arrayLenght;
-let player = document.createElement('div');
-let monster = document.createElement('div');
+let monster0, monster1, monster2, monster3
 let playerActiveId;
-let message = document.querySelector('#message');
-let previousDirection;
-let monsterid, monsterMoveLeft, monsterMoveDown, monsterMoveUp, monsterMoveRight;
-//////////////////////////////////////////////////////////////////////////////////////   SELECT MAP LEVEL
-import { LEVEL_1 } from './mazes.js';
-import { LEVEL_2 } from './mazes.js';
-import { LEVEL_3 } from './mazes.js';
-
+let score = 0;
+let lives = 3;
+let lastMove;
+let cooldown = false;
+let gameover = false;
+let gamewon = false;
+//////////////////////////////////////////////////////////////////////////////////////   SELECT MAP
+import { LEVEL_1 } from './assets/mazes.js';
 loadMap(LEVEL_1);
-let currentLevel = "LEVEL_1";
-
-window.nextLevel = nextLevel;
-function nextLevel() {
-   switch (currentLevel) {
-     case 'LEVEL_1':
-        currentLevel = "LEVEL_2";
-        loadMap(LEVEL_2)
-        message.innerText = "[Level 2] Find the treasure and navigate trough the jungle. (use the arrow keys)";
-        document.querySelector('#succes').style.visibility = "hidden";
-       break;
-     case 'LEVEL_2':
-        currentLevel = "LEVEL_3";
-        loadMap(LEVEL_3)
-        document.querySelector('#succes').style.visibility = "hidden";
-        message.innerText = "[Level 3] Find the treasure and navigate trough the jungle. (use the arrow keys)";
-        document.querySelector('#gonextlevel').innerText = "You have finished all levels, go back to level 1"
-        break;
-     case 'LEVEL_3':
-        currentLevel = "LEVEL_1";
-        loadMap(LEVEL_1)
-        document.querySelector('#succes').style.visibility = "hidden";
-        message.innerText = "[Level 1] Find the treasure and navigate trough the jungle. (use the arrow keys)";
-        document.querySelector('#gonextlevel').innerText = "Go to the next level"
-       break;
-   }
-}
 ///////////////////////////////////////////////////////////////////////////////////////  LOAD MAP
 function loadMap(array) {
-
     array.forEach(n => arrayLenght = n.length); 
     let blockWidth = 50; //Width of one cell in px
     let totalWidth = blockWidth * arrayLenght;
     main.style.width = `${totalWidth}px`;
+    document.getElementById('score').style.width = `${totalWidth}px`;
+    document.getElementById('score').style.margin = `0 auto`;
     section.style.width = `${totalWidth}px`;
     let merged = [].concat.apply([], array); 
 
@@ -60,7 +31,7 @@ function loadMap(array) {
             merged[i] = `<div id="${i}" class="wall"></div>`;
         }
         if(merged[i] == '.'){
-            merged[i] = `<div id="${i}" class="path"><div id="food${i}" class="food"></div></div>`;
+            merged[i] = `<div id="${i}" class="path"><div id="food${i}" class="food">🪙</div></div>`;
         }
         if(merged[i] == 'S'){
             merged[i] = `<div id="${i}" class="start"></div>`;
@@ -73,7 +44,6 @@ function loadMap(array) {
     main.innerHTML = finalarray;
     loadPlayer();
 }
-
 ////////////////////////////////////////////////////////////////////////////////////   LOAD PLAYER
 function loadPlayer() {
     let start = document.querySelector('.start');
@@ -81,101 +51,204 @@ function loadPlayer() {
     start.appendChild(player);
     player.setAttribute("id", `${start.id}`);
     loadMonsters();
-    loadFood();
 }
-////////////////////////////////////////////////////////////////////////////////////   LOAD FOOD
-function loadFood () {
-    console.log('load food function called')
-    const path = document.querySelectorAll('.path');
-    
-    for (let i = 0; i < path.length; i++) {
-      //  const element = array[i];
-        
-    }
-}
-////////////////////////////////////////////////////////////////////////////////////   GAME CONTROLS
-
+////////////////////////////////////////////////////////////////////////////////////   MONSTER CONTROLS
 function loadMonsters() {
-    let start = document.querySelector('.start');
-    monster.setAttribute("id", `${start.id}`);
-    monster.setAttribute("class", "monster");
-    start.appendChild(monster); 
-    previousDirection = 'monsterMoveDown';
-    moveTimer();
+    monster0 = document.createElement('div');
+    monster0.setAttribute("id", `109`);
+    monster0.setAttribute("class", "monster0");
+    document.getElementById('109').appendChild(monster0);
+
+    monster1 = document.createElement('div');
+    monster1.setAttribute("id", `109`);
+    monster1.setAttribute("class", "monster1");
+    document.getElementById('109').appendChild(monster1);
+
+    monster2 = document.createElement('div');
+    monster2.setAttribute("id", `109`);
+    monster2.setAttribute("class", "monster2");
+    document.getElementById('109').appendChild(monster2);
+
+    monster3 = document.createElement('div');
+    monster3.setAttribute("id", `109`);
+    monster3.setAttribute("class", "monster3");
+    document.getElementById('109').appendChild(monster3);
+
+    setTimeout(loadMonster0, 2000);
+    setTimeout(loadMonster1, 4000);
+    setTimeout(loadMonster2, 6000);
+    setTimeout(loadMonster3, 8000);
 }
 
-function moveTimer() {
-    setTimeout(chooseMovement, 300);
-}
+function loadMonster0() { timerMonster0(); }
+function timerMonster0() { setTimeout(startMonster0, 200); }
+function startMonster0() { chooseMovement('monster0'); }
 
-function chooseMovement() {
-    monsterid = parseInt(monster.id);
+function loadMonster1() { timerMonster1(); }
+function timerMonster1() { setTimeout(startMonster1, 200); }
+function startMonster1() { chooseMovement('monster1') }
 
-    if(previousDirection == 'monsterMoveDown') 
-    {
-        if(moveMonsters(monsterid +arrayLenght, 'monsterMoveDown') === true) {}    
-        else if(moveMonsters(monsterid +1, 'monsterMoveRight') === true) {}
-        else if(moveMonsters(monsterid -1, 'monsterMoveLeft') === true) {}
-    } 
-    else if(previousDirection == 'monsterMoveRight') 
-    {
-        if(moveMonsters(monsterid +1, 'monsterMoveRight')=== true) {}    
-        else if(moveMonsters(monsterid +arrayLenght, 'monsterMoveDown') === true) {}
-        else if(moveMonsters(monsterid -arrayLenght, 'monsterMoveUp') === true) {}
-    } 
-    else if(previousDirection == 'monsterMoveUp') 
-    {
-        if(moveMonsters(monsterid -arrayLenght, 'monsterMoveUp') === true) {}    
-        else if(moveMonsters(monsterid +1, 'monsterMoveRight') === true) {}
-        else if(moveMonsters(monsterid -1, 'monsterMoveLeft') === true) {}
-    } 
-    else if(previousDirection == 'monsterMoveLeft') 
-    {
-        if(moveMonsters(monsterid -1, 'monsterMoveLeft')=== true) {}    
-        else if(moveMonsters(monsterid +arrayLenght, 'monsterMoveDown') === true) {}
-        else if(moveMonsters(monsterid -arrayLenght, 'monsterMoveUp') === true) {}
+function loadMonster2() { timerMonster2(); }
+function timerMonster2() { setTimeout(startMonster2, 200); }
+function startMonster2() { chooseMovement('monster2') }
+
+function loadMonster3() { timerMonster3(); }
+function timerMonster3() { setTimeout(startMonster3, 200); }
+function startMonster3() { chooseMovement('monster3') }
+
+function chooseMovement(monsterId) {
+    let movements = ["up","down","left","right"];
+
+    switch (lastMove) {
+        case "up":
+           movements = ["up","left","right"];
+          break;
+        case "down":
+            movements = ["down","left","right"];
+          break;
+        case "right":
+            movements = ["up","down","right"];
+            break;
+        case "left":
+            movements = ["up","down","left"];
+          break;
+      }
+
+    if(gameover == false && gamewon == false) {
+        let direction = movements[Math.floor(Math.random() * movements.length)];
+        moveMonsters(monsterId, direction);
     }
 }
 
-function moveMonsters(direction, directonString) {
-    if(direction >= 0) {
-        if(!document.getElementById(`${direction}`).classList.contains('wall') && !document.getElementById(`${direction}`).classList.contains('start')) 
-        {
-            if(document.getElementById(`${direction}`).getAttribute('id') != previousDirection) {
-                
-                document.getElementById(direction).appendChild(monster);
-                monster.setAttribute("id", `${direction}`);
+function moveMonsters(monsterId, direction) {
+    let directionId;
+    let currentId = document.querySelector(`.${monsterId}`);
 
-                previousDirection = directonString;
+    switch (direction) {
+        case "up":
+            directionId = currentId.id -arrayLenght;
+            lastMove = "up";
+          break;
+        case "down":
+            directionId = parseInt(currentId.id) + arrayLenght;
+            lastMove = "down";
+          break;
+        case "right":
+            directionId = parseInt(currentId.id) + 1;
+            lastMove = "right";
+            break;
+        case "left":
+            directionId = parseInt(currentId.id) -1;
+            lastMove = "left";
+          break;
+      }
 
-                moveTimer();
-            } return true;
+    if(document.getElementById(`${directionId}`).classList.contains('path')) 
+    {
+        if(document.getElementById(`${directionId}`).classList.contains('path')) {
+            let directionElement = document.getElementById(directionId);
+            let element = document.querySelector(`.${monsterId}`);
+
+            directionElement.appendChild(element);
+            element.setAttribute("id", `${directionId}`);
+        } else if(document.getElementById(`${++currentId.id}`).classList.contains('path')) {
+            let directionElement = document.getElementById(++currentId.id);
+            let element = document.querySelector(`.${monsterId}`);
+
+            directionElement.appendChild(element);
+            element.setAttribute("id", `${++currentId.id}`);
+        }
+    } 
+
+    if(monster0.id == player.id || monster1.id == player.id || monster2.id == player.id || monster3.id == player.id) {
+        if(cooldown == false) {
+            lives = lives - 1;
+            cooldown = true;
+            setTimeout(cooldownFinish, 5000);
+            monster0.style.filter = 'grayscale(1)'
+            monster1.style.filter = 'grayscale(1)'
+            monster2.style.filter = 'grayscale(1)'
+            monster3.style.filter = 'grayscale(1)'
+            document.getElementById('score').innerHTML = `Coins: ${score} - Lives: ${lives}`
+
+            if(lives <= 0) {
+                gameOver();
+            }
         }
     }
+
+    if(score >= 119) {
+        gameWon();
+    } 
+
+    monster0.classList.add("bounce")
+    monster1.classList.add("bounce")
+    monster2.classList.add("bounce")
+    monster3.classList.add("bounce")
+
+    if(monsterId == "monster0") {
+        timerMonster0(); 
+    } else if(monsterId == "monster1") {
+        timerMonster1();
+    } else if(monsterId == "monster2") {
+        timerMonster2();
+    } else if(monsterId == "monster3") {
+        timerMonster3();
+    }
+}
+
+function gameOver() {
+    gameover = true;
+}
+
+document.querySelector(`#restart`).addEventListener("click", () => {
+    playAgain();
+});
+
+function playAgain() {
+    location.reload();
+}
+
+function gameWon() {
+    gamewon = true;
+    
+    message.innerHTML = "<font color='darkgreen'><b>SUCCES</b></font> -You have found all the coins !";
+    document.querySelector('#succes').style.visibility = "visible";
+    section.style.backgroundColor = `#CCFFFF`;
+}
+
+function cooldownFinish() {
+    cooldown = false;
+    monster0.style.filter = 'grayscale(0)'
+    monster1.style.filter = 'grayscale(0)'
+    monster2.style.filter = 'grayscale(0)'
+    monster3.style.filter = 'grayscale(0)'
 }
 //////////////////////////////////////////////////////////////////////////////// MOVEMENT KEYS
 document.addEventListener('keydown', event => {
-    switch (event.code) {
-      case "ArrowRight":
-        playerActiveId = player.id;
-        let newPosIdRight = ++playerActiveId; 
-        movePlayer(newPosIdRight);
-        break;
-      case "ArrowLeft":
-        playerActiveId = player.id;  
-        let newPosIdLeft = --playerActiveId;
-        movePlayer(newPosIdLeft);
-        break;
-      case "ArrowUp":
-        let newPosIdUp = parseInt(player.id) - arrayLenght;
-        movePlayer(newPosIdUp);
-          break;
-      case "ArrowDown":
-        let newPosIdDown = parseInt(player.id) + arrayLenght;
-        movePlayer(newPosIdDown);
-        break;
+    if(gameover == false && gamewon == false) {
+        switch (event.code) {
+            case "ArrowRight":
+              playerActiveId = player.id;
+              let newPosIdRight = ++playerActiveId; 
+              movePlayer(newPosIdRight);
+              break;
+            case "ArrowLeft":
+              playerActiveId = player.id;  
+              let newPosIdLeft = --playerActiveId;
+              movePlayer(newPosIdLeft);
+              break;
+            case "ArrowUp":
+              let newPosIdUp = parseInt(player.id) - arrayLenght;
+              movePlayer(newPosIdUp);
+                break;
+            case "ArrowDown":
+              let newPosIdDown = parseInt(player.id) + arrayLenght;
+              movePlayer(newPosIdDown);
+              break;
+        }
     }
-  }) 
+}) 
 /////////////////////////////////////////////////////////////////////////////////   PLAYER MOVEMENT
 function movePlayer(direction) {
     if(document.getElementById(direction).classList.contains("wall")) {
@@ -184,13 +257,6 @@ function movePlayer(direction) {
     } else if(document.getElementById(direction).classList.contains("start")) {
         document.getElementById(direction).appendChild(player);
         player.setAttribute("id", `${direction}`);
-        
-    } else if(document.getElementById(direction).classList.contains("treasure")) {
-        document.getElementById(direction).appendChild(player);
-        player.setAttribute("id", `${direction}`);
-        message.innerHTML = "<font color='darkgreen'><b>SUCCES</b></font> - You have reached the treasure !";
-        document.querySelector('#succes').style.visibility = "visible";
-        section.style.backgroundColor = `#CCFFFF`;
     } else {
         document.getElementById(direction).appendChild(player);
 
@@ -202,11 +268,15 @@ function movePlayer(direction) {
         if(foodElement != null) {
             document.getElementById(foodid).remove();
             message.innerText = "Great! You have picked up a coin and stashed it in your bag.";
+            ++score;
+            let audio = new Audio('./assets/audio/coin.mp3');
+            audio.play();
+            document.getElementById('score').innerHTML = `Coins: ${score} - Lives: ${lives}`
         }
             
         player.setAttribute("id", `${direction}`);
         section.style.backgroundColor = `white`;
+
+        player.classList.add("bounce")
     }
 }
-
-
