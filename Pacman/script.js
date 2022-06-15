@@ -12,6 +12,7 @@ let lastMove;
 let cooldown = false;
 let gameover = false;
 let gamewon = false;
+let newPosIdDirection;
 //////////////////////////////////////////////////////////////////////////////////////   SELECT MAP
 import { LEVEL_1 } from './assets/mazes.js';
 loadMap(LEVEL_1);
@@ -162,6 +163,8 @@ function moveMonsters(monsterId, direction) {
 
     if(monster0.id == player.id || monster1.id == player.id || monster2.id == player.id || monster3.id == player.id) {
         if(cooldown == false) {
+            let audio = new Audio('./assets/audio/grunt.mp3');
+            audio.play();
             lives = lives - 1;
             cooldown = true;
             setTimeout(cooldownFinish, 5000);
@@ -179,6 +182,8 @@ function moveMonsters(monsterId, direction) {
 
     if(score >= 119) {
         gameWon();
+        let audio = new Audio('./assets/audio/win.mp3');
+        audio.play();
     } 
 
     monster0.classList.add("bounce")
@@ -199,6 +204,10 @@ function moveMonsters(monsterId, direction) {
 
 function gameOver() {
     gameover = true;
+    message.innerHTML = "<font color='red'><b>GAME OVER</b></font> You have lost all your lives !";
+    document.querySelector('h2').innerText = 'Game Over !'
+    document.querySelector('#succes').style.visibility = "visible";
+    section.style.backgroundColor = `#CCFFFF`;
 }
 
 document.querySelector(`#restart`).addEventListener("click", () => {
@@ -211,7 +220,6 @@ function playAgain() {
 
 function gameWon() {
     gamewon = true;
-    
     message.innerHTML = "<font color='darkgreen'><b>SUCCES</b></font> -You have found all the coins !";
     document.querySelector('#succes').style.visibility = "visible";
     section.style.backgroundColor = `#CCFFFF`;
@@ -224,31 +232,72 @@ function cooldownFinish() {
     monster2.style.filter = 'grayscale(0)'
     monster3.style.filter = 'grayscale(0)'
 }
+
+
+let moveTimer
 //////////////////////////////////////////////////////////////////////////////// MOVEMENT KEYS
 document.addEventListener('keydown', event => {
+
+    clearTimeout(moveTimer);
+
     if(gameover == false && gamewon == false) {
         switch (event.code) {
             case "ArrowRight":
-              playerActiveId = player.id;
-              let newPosIdRight = ++playerActiveId; 
-              movePlayer(newPosIdRight);
+                playerActiveId = player.id;
+                newPosIdDirection = ++playerActiveId; 
+                movePlayer(newPosIdDirection)
+                autoMovement('right')
               break;
             case "ArrowLeft":
-              playerActiveId = player.id;  
-              let newPosIdLeft = --playerActiveId;
-              movePlayer(newPosIdLeft);
+                playerActiveId = player.id;  
+                newPosIdDirection = --playerActiveId;
+                movePlayer(newPosIdDirection);
+                autoMovement('left')
               break;
             case "ArrowUp":
-              let newPosIdUp = parseInt(player.id) - arrayLenght;
-              movePlayer(newPosIdUp);
+                newPosIdDirection = parseInt(player.id) - arrayLenght;
+                movePlayer(newPosIdDirection);
+                autoMovement('up')
                 break;
             case "ArrowDown":
-              let newPosIdDown = parseInt(player.id) + arrayLenght;
-              movePlayer(newPosIdDown);
+                newPosIdDirection = parseInt(player.id) + arrayLenght;
+                movePlayer(newPosIdDirection);
+                autoMovement('down')
               break;
         }
     }
 }) 
+
+function autoMovement(directionStr) {
+    if(movePlayer(newPosIdDirection) == true) {
+
+        startTimer()
+        function startTimer() { moveTimer = setTimeout(moveAfterTimer, 300); }
+        
+        function moveAfterTimer() {
+            playerActiveId = player.id;
+
+            if(directionStr == "right") {
+                let newPosLoop = ++playerActiveId; 
+                movePlayer(newPosLoop)
+            } else if(directionStr == "left") {
+                let newPosLoop = --playerActiveId; 
+                movePlayer(newPosLoop)
+            } else if(directionStr == "up") {
+                let newPosLoop = parseInt(player.id) - arrayLenght; 
+                movePlayer(newPosLoop)
+            }  else if(directionStr == "down") {
+                let newPosLoop = parseInt(player.id) + arrayLenght; 
+                movePlayer(newPosLoop)
+            } 
+            
+            startTimer()
+        }
+        
+    } else if(movePlayer(newPosIdDirection) == false) {
+        console.log('false')
+    }
+}
 /////////////////////////////////////////////////////////////////////////////////   PLAYER MOVEMENT
 function movePlayer(direction) {
     if(document.getElementById(direction).classList.contains("wall")) {
@@ -262,11 +311,11 @@ function movePlayer(direction) {
 
         message.innerText = "Navigating through the jungle...";
 
-        let foodid = `food${direction}`;
-        let foodElement = document.getElementById(foodid)
+        let coinId = `food${direction}`;
+        let coinElement = document.getElementById(coinId)
 
-        if(foodElement != null) {
-            document.getElementById(foodid).remove();
+        if(coinElement != null) {
+            document.getElementById(coinId).remove();
             message.innerText = "Great! You have picked up a coin and stashed it in your bag.";
             ++score;
             let audio = new Audio('./assets/audio/coin.mp3');
@@ -276,7 +325,7 @@ function movePlayer(direction) {
             
         player.setAttribute("id", `${direction}`);
         section.style.backgroundColor = `white`;
-
         player.classList.add("bounce")
+        return true;
     }
-}
+} 
